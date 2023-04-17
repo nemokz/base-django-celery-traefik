@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./app
+    command: /bin/sh -c "entrypoint.sh"
+    volumes:
+      - ./app:/home/app/web/
+    expose:
+      - 8000
+    env_file:
+      - ./.env/.prod
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=Host(`traefik.your-domain.com`)"
+      - "traefik.http.routers.django.tls=true"
+      - "traefik.http.routers.django.tls.certresolver=letsencrypt"
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    env_file:
+      - ./.env/.prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.your-domain.com`)"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=user:$$apr1$$RDg/M2Kc$$IhewEQML0NgYydrQj43Mv1"
+
+  redis:
+    image: redis:7-alpine
+    command: /bin/sh -c "redis-server --appendonly yes --requirepass $$REDIS_PASSWORD"
+    ports:
+      - 6379:6379
+    depends_on:
+      - db
+
+  traefik:
+    build:
+      context: .
+      dockerfile: Dockerfile.traefik
+    ports:
+      - 80:80
+      - 433:433
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik-public-certificates:/certificates"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard-django-traefik.your-domain.com`)"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=testuser:$$apr1$$jIKW.bdS$$eKXe4Lxjgy/rH65wP1iQe1"
+  
+  flower:
+    image: mher/flower
+    env_file:
+      - ./.env/.prod
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+
+volumes:
+  app:
+  postgres_data_prod:
+  traefik-public-certificates:
