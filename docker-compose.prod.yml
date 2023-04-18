@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: ./app
-    command: /bin/sh -c "entrypoint.sh"
+    command: /bin/sh -c "/home/app/web/entrypoint.sh"
     volumes:
       - ./app:/home/app/web/
     expose:
@@ -39,6 +39,8 @@ services:
   redis:
     image: redis:7-alpine
     command: /bin/sh -c "redis-server --appendonly yes --requirepass $$REDIS_PASSWORD"
+    env_file:
+      - ./.env/.dev
     ports:
       - 6379:6379
     depends_on:
