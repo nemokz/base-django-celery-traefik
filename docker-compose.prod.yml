@@ -7,6 +7,7 @@ services:
     command: /bin/sh -c "/home/app/web/entrypoint.sh"
     volumes:
       - ./app:/home/app/web/
+      - ./app/staticfiles:/home/app/web/staticfiles
     expose:
       - 8000
     env_file:
