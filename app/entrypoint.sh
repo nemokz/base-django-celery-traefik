@@ -1,9 +1,18 @@
 #!/usr/bin/env sh
 
-
 python manage.py makemigrations
 python manage.py migrate
 python manage.py collectstatic --no-input
+
+if [ "$DJANGO_SUPERUSER_USERNAME" ]
+then
+    python manage.py createsuperuser \
+        --noinput \
+        --username $DJANGO_SUPERUSER_USERNAME \
+        --email $DJANGO_SUPERUSER_EMAIL
+fi
+
+$@
 
 celery -A config worker --loglevel=INFO --concurrency=10 -n worker1@%h &
 celery -A config worker -B &
