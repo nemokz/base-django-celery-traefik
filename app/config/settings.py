@@ -1,26 +1,19 @@
 import os
 from pathlib import Path
-import environ
-
-
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = bool(int(os.environ.get("DEBUG", True)))
 
 
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS", default=['*'])
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default=['*'])
 
 
-CSRF_TRUSTED_ORIGINS = env("DJANGO_ALLOWED_HOSTS").split(",")
+CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
 
 # Application definition
 
@@ -74,12 +67,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": env("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": env("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": env("SQL_USER", "user"),
-        "PASSWORD": env("SQL_PASSWORD", "password"),
-        "HOST": env("SQL_HOST", "localhost"),
-        "PORT": env("SQL_PORT", "5432"),
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
 
@@ -127,5 +120,5 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = env("CELERY_BROKER")
-CELERY_RESULT_BACKEND = env("CELERY_BACKEND")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
