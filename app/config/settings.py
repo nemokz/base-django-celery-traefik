@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,11 +10,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get("DEBUG", True)))
 
+ALLOWED_HOSTS = [ os.environ.get("DJANGO_ALLOWED_HOSTS")]
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default=['*'])
-
-
-CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+CSRF_TRUSTED_ORIGINS = [os.environ.get("CSRF_TRUSTED_ORIGINS")]
 
 # Application definition
 
