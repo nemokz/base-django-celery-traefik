@@ -18,7 +18,8 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
 # Final image
 FROM python:3.11.3-alpine
 
-RUN addgroup -S app && adduser -S app -G app
+RUN adduser -D app
+RUN addgroup app app
 
 ENV APP_HOME=/home/app/web
 RUN mkdir -p $APP_HOME
@@ -33,6 +34,8 @@ RUN apk add --no-cache libjpeg \
 
 COPY . $APP_HOME
 
-RUN chown -R app:app $APP_HOME
+RUN chown -R app:app $APP_HOME 
+RUN mkdir -p /certificates
+RUN chown -R app:app /certificates
 
 USER app
