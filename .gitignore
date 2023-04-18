@@ -155,3 +155,4 @@ cython_debug/
 # Customs
 
 .env/.prod
+.DS_Store
