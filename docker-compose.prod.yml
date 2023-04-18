@@ -11,7 +11,7 @@ services:
     expose:
       - 8000
     env_file:
-      - ./.env/.prod
+      - ./.env
     depends_on:
       - db
     labels:
@@ -27,13 +27,13 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./.env/.prod
+      - ./.env
 
   redis:
     image: redis:7-alpine
     command: /bin/sh -c "redis-server --appendonly yes --requirepass $$REDIS_PASSWORD"
     env_file:
-      - ./.env/.prod
+      - ./.env
     ports:
       - 6379:6379
     depends_on:
@@ -57,11 +57,11 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=testuser:$$apr1$$jIKW.bdS$$eKXe4Lxjgy/rH65wP1iQe1"
-  
+
   flower:
     image: mher/flower
     env_file:
-      - ./.env/.prod
+      - ./.env
     ports:
       - 5555:5555
     depends_on:

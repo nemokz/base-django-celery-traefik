@@ -10,7 +10,7 @@ services:
     expose:
       - 8000
     env_file:
-      - ./.env/.dev
+      - ./.env
     depends_on:
       - db
     labels:
@@ -24,7 +24,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - ./.env/.dev
+      - ./.env
 
   redis:
     image: redis:7-alpine
@@ -48,7 +48,7 @@ services:
   flower:
     image: mher/flower
     env_file:
-      - ./.env/.dev
+      - ./.env
     ports:
       - 5555:5555
     depends_on:
