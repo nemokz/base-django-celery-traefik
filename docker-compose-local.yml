@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: ./app
-    command: /bin/sh -c "local_entrypoint.sh"
+    command: /bin/sh -c "/home/app/web/local_entrypoint.sh"
     volumes:
       - ./app:/home/app/web/
     expose:
