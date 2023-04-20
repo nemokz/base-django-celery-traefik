@@ -22,8 +22,6 @@ services:
       - ./.env
     ports:
       - 6379:6379
-    depends_on:
-      - db
   
   traefik:
     image: traefik:v2.9.10
