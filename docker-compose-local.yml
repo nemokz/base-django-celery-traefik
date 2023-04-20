@@ -17,15 +17,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.django.rule=Host(`localhost`)"
 
-  db:
-    image: postgres:15-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - 5432:5432
-    env_file:
-      - ./.env
-
   redis:
     image: redis:7-alpine
     command: /bin/sh -c "redis-server --appendonly yes --requirepass $$REDIS_PASSWORD"
