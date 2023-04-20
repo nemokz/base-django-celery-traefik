@@ -11,8 +11,6 @@ services:
       - 8000
     env_file:
       - ./.env
-    depends_on:
-      - db
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.django.rule=Host(`localhost`)"
